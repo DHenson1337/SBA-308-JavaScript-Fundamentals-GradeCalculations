@@ -17,12 +17,25 @@ const LearnerSubmissions = [
 ];
 
 //Lets see how i'll call each Object I want
+/* let scores = Object.values(LearnerSubmissions[1]);
+let points = Object.values(AssignmentGroup.assignments);
+let group = [scores , AssignmentGroup];
+// console.log(scores);
+console.log(group); */
+
+// console.log(AssignmentGroup.assignments);
 
 
+// Check if the assignment group belongs to the course
+function confirmAssignmentGroup(courseInfo, assignmentGroup) {
+  return courseInfo.id === assignmentGroup.course_id;
+}
 
+console.log(confirmAssignmentGroup(CourseInfo, AssignmentGroup));
+console.log(CourseInfo.id);
+console.log(AssignmentGroup.course_id);
 
-
-function getLearnerData(course, ag, submissions) {
+/* function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
     const result = [
       {
@@ -43,7 +56,7 @@ function getLearnerData(course, ag, submissions) {
   }
   const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
   
-  console.log(result);
+  console.log(result); */
 
   /*
   [] = an array  {} = an Object AssignmentGroup = {object[array of{objects}]}  LearnerSumbmissions = [array of{objects{objects in an object}}]

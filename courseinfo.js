@@ -93,12 +93,22 @@ function getLearnerData(course, ag, submissions) {
       if (submissions[i].assignment_id === dueAssignments[j].id) {
         let points = submissions[i].submission.score / dueAssignments[j].points_possible;
 
+        // Check if the submission is late  
+        const submittedAt = new Date(submissions[i].submission.submitted_at);
+        const dueAt = new Date(dueAssignments[j].due_at);
+        const isLate = submittedAt > dueAt;
+        if (isLate) { points *= 0.90 };
+
+
         // Locate learners to assign points too
         for (let k = 0; k < result.length; k++) {
           if (result[k].id == submissions[i].learner_id) {
             // Assign the values to respective learners
             result[k][submissions[i].assignment_id] = points;
-            result[k].totalScore += submissions[i].submission.score;
+            if (isLate) {
+              result[k].totalScore += (submissions[i].submission.score) * 0.9;
+            } else { result[k].totalScore += submissions[i].submission.score; }
+
             result[k].totalPoints += dueAssignments[j].points_possible;
           }
         }

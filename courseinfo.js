@@ -57,6 +57,17 @@ function getLearnerData(course, ag, submissions) {
     console.log("Invalid input, course.id doesn't match this group")
     return;
   }
+   // Exclude assignments not dued yet
+   const currentDate = new Date();
+   const dueAssignments = []; 
+   for (let i = 0; i < ag.assignments.length; i++) {
+    const assignment = ag.assignments[i];
+    if (new Date(assignment.due_at) <= currentDate) {
+      dueAssignments.push(assignment);
+    }
+}
+
+
 
 
 return result

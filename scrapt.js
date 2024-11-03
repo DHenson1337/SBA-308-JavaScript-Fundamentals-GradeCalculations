@@ -76,7 +76,7 @@ console.log(AssignmentGroup.course_id); */
 
 // Getting a list of each student from submissions
 
-const student = submissions.reduce((accumulator, id) =>{
+/* const student = submissions.reduce((accumulator, id) =>{
 const {learner_id} = id;
 if (!accumulator[learner_id]) {
   accumulator[learner_id] = [];
@@ -87,3 +87,14 @@ return accumulator
 })
 
 console.log(student);
+ */
+
+if (submissions[0].assignment_id === ag.assignments[0].id ){
+  console.log("Works");
+}
+
+// submissions[0].mess = "Test"
+
+console.log(submissions);
+
+console.log(submissions[0].submission.score);

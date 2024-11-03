@@ -17,6 +17,14 @@ const AssignmentGroup = {
     { id: 3, name: "Code the World", due_at: "3156-11-15", points_possible: 500 }
   ]
 };
+//loop through learner submissions i< submissions.length
+// match assignment_id with ag. assignments[i].id
+//if match avg: {score/points possible}
+//result[i].key2 = "this is my next key"
+
+// second for loop assignment group. assignments.length j =0
+//
+
 
 // The provided learner submission data.
 const LearnerSubmissions = [
@@ -51,38 +59,60 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
   const unSortedId = [];
-
-  for (i =0; i<submissions.length; i++){
-    unSortedId.push(submissions[i].learner_id);
-  }
-  const sortedId = [...new Set(unSortedId)]; 
   const result = [];
 
-  for (i=0; i<sortedId.length; i++){
-    result.push({id: sortedId[i]});
+  // Turn learner_id into a key
+  for (let i = 0; i < submissions.length; i++) {
+    unSortedId.push(submissions[i].learner_id);
   }
-  
- /*  // Compares assignmentgroup and course id#
-  if (course.id !== ag.course_id){
-    console.log("Invalid input, course.id doesn't match this group")
-    return;
+  const sortedId = [...new Set(unSortedId)];
+  //Push each student into an Array of Objects
+  for (let i = 0; i < sortedId.length; i++) {
+    result.push({ id: sortedId[i] });
   }
-   // Exclude assignments not dued yet
-   const currentDate = new Date();
-   const dueAssignments = []; 
-   for (let i = 0; i < ag.assignments.length; i++) {
-    const assignment = ag.assignments[i];
-    if (new Date(assignment.due_at) <= currentDate) {
-      dueAssignments.push(assignment);
+  // Add the submission score for each Learner
+  for (let i = 0; i < submissions.length; i++) {
+    for (let j = 0; j < ag.assignments.length; j++) {
+      if (submissions[i].assignment_id === ag.assignments[j].id) {
+        let points = submissions[i].submission.score / ag.assignments[j].points_possible;
+
+        // Locate learners to assign points too
+        for (let k = 0; k < result.length; k++) {
+          if (result[k].id == submissions[i].learner_id) {
+            // Assign the assignment ID to each score key
+            result[k][submissions[i].assignment_id] = points;
+          }
+        }
+      }
     }
-} */
+  }
 
- 
+  //Assigning the averages:
+  for (let i =0; i< ag.assignments.length; i++){
+    
+  }
+
+  /*  // Compares assignmentgroup and course id#
+   if (course.id !== ag.course_id){
+     console.log("Invalid input, course.id doesn't match this group")
+     return;
+   }
+    // Exclude assignments not dued yet
+    const currentDate = new Date();
+    const dueAssignments = []; 
+    for (let i = 0; i < ag.assignments.length; i++) {
+     const assignment = ag.assignments[i];
+     if (new Date(assignment.due_at) <= currentDate) {
+       dueAssignments.push(assignment);
+     }
+ } */
 
 
 
-return result
-} 
+  // result[2].test = "Test"
+
+  return result
+}
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);

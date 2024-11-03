@@ -50,9 +50,19 @@ const LearnerSubmissions = [
 
 
 function getLearnerData(course, ag, submissions) {
+  const unSortedId = [];
+
+  for (i =0; i<submissions.length; i++){
+    unSortedId.push(submissions[i].learner_id);
+  }
+  const sortedId = [...new Set(unSortedId)]; 
   const result = [];
 
-  // Compares assignmentgroup and course id#
+  for (i=0; i<sortedId.length; i++){
+    result.push({id: sortedId[i]});
+  }
+  
+ /*  // Compares assignmentgroup and course id#
   if (course.id !== ag.course_id){
     console.log("Invalid input, course.id doesn't match this group")
     return;
@@ -65,8 +75,9 @@ function getLearnerData(course, ag, submissions) {
     if (new Date(assignment.due_at) <= currentDate) {
       dueAssignments.push(assignment);
     }
-}
+} */
 
+ 
 
 
 

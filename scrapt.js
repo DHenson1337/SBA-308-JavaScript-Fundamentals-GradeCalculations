@@ -72,3 +72,18 @@ console.log(AssignmentGroup.course_id); */
     }
 }
 // console.log(dueAssignments);
+
+
+// Getting a list of each student from submissions
+
+const student = submissions.reduce((accumulator, id) =>{
+const {learner_id} = id;
+if (!accumulator[learner_id]) {
+  accumulator[learner_id] = [];
+}
+//Push the current object into an array with the id
+accumulator[learner_id].push(id)
+return accumulator
+})
+
+console.log(student);

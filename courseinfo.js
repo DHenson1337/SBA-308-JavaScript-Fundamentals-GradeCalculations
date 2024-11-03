@@ -61,6 +61,23 @@ function getLearnerData(course, ag, submissions) {
   const unSortedId = [];
   const result = [];
 
+
+  // Compares assignmentgroup and course id#
+  if (course.id !== ag.course_id) {
+    console.log("Invalid input, course.id doesn't match this group")
+    return;
+  }
+  // Exclude assignments not dued yet
+  const currentDate = new Date();
+  const dueAssignments = [];
+  for (let i = 0; i < ag.assignments.length; i++) {
+    const assignment = ag.assignments[i];
+    if (new Date(assignment.due_at) <= currentDate) {
+      dueAssignments.push(assignment);
+    }
+  }
+
+
   // Turn learner_id into a key
   for (let i = 0; i < submissions.length; i++) {
     unSortedId.push(submissions[i].learner_id);
@@ -68,44 +85,41 @@ function getLearnerData(course, ag, submissions) {
   const sortedId = [...new Set(unSortedId)];
   //Push each student into an Array of Objects
   for (let i = 0; i < sortedId.length; i++) {
-    result.push({ id: sortedId[i] });
+    result.push({ id: sortedId[i], totalScore: 0, totalPoints: 0 });
   }
   // Add the submission score for each Learner
   for (let i = 0; i < submissions.length; i++) {
-    for (let j = 0; j < ag.assignments.length; j++) {
-      if (submissions[i].assignment_id === ag.assignments[j].id) {
-        let points = submissions[i].submission.score / ag.assignments[j].points_possible;
+    for (let j = 0; j < dueAssignments.length; j++) {
+      if (submissions[i].assignment_id === dueAssignments[j].id) {
+        let points = submissions[i].submission.score / dueAssignments[j].points_possible;
 
         // Locate learners to assign points too
         for (let k = 0; k < result.length; k++) {
           if (result[k].id == submissions[i].learner_id) {
-            // Assign the assignment ID to each score key
+            // Assign the values to respective learners
             result[k][submissions[i].assignment_id] = points;
+            result[k].totalScore += submissions[i].submission.score;
+            result[k].totalPoints += dueAssignments[j].points_possible;
           }
         }
       }
     }
   }
+  let z = 0;
+  while (z < result.length) {
+    if (result[z].totalPoints > 0) {
+      result[z].avg = result[z].totalScore / result[z].totalPoints;
+    } else {
+      result[z].avg = 0; // In case there are no points possible
+    }
 
-  //Assigning the averages:
-  for (let i =0; i< ag.assignments.length; i++){
-    
+    // Remove the extra fields 
+    delete result[z].totalScore;
+    delete result[z].totalPoints;
+    z++
   }
 
-  /*  // Compares assignmentgroup and course id#
-   if (course.id !== ag.course_id){
-     console.log("Invalid input, course.id doesn't match this group")
-     return;
-   }
-    // Exclude assignments not dued yet
-    const currentDate = new Date();
-    const dueAssignments = []; 
-    for (let i = 0; i < ag.assignments.length; i++) {
-     const assignment = ag.assignments[i];
-     if (new Date(assignment.due_at) <= currentDate) {
-       dueAssignments.push(assignment);
-     }
- } */
+
 
 
 
@@ -117,49 +131,3 @@ function getLearnerData(course, ag, submissions) {
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//I don't think this part will work for what the assignment wants me to do.
-/* 
-//Part 1
-// Take the learner Submissions group and group them
-
-function groupLearner(arr) {
-  const group = {};
-
-  //loop through each submission
-  for (let data of arr) {
-    const learner_id = data.learner_id;
-    const assignment_id = data.assignment_id;
-    const submission = data.submission;
-
-
-    if (!group[learner_id]) {
-      group[learner_id] = { learner_id: learner_id, submissions: [] };
-    }
-    //creating an new object with the submissions
-    group[learner_id].submissions.push({
-      assignment_id: assignment_id,
-      submitted_at: submission.submitted_at,
-      score: submission.score
-    })
-  }
-  return Object.values(group);
-}
-console.log(object);
-const studentData = groupLearner(LearnerSubmissions);
-console.log(studentData); */

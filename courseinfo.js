@@ -52,10 +52,18 @@ const LearnerSubmissions = [
 function getLearnerData(course, ag, submissions) {
   const result = [];
 
+  // Compares assignmentgroup and course id#
+  if (course.id !== ag.course_id){
+    console.log("Invalid input, course.id doesn't match this group")
+    return;
+  }
 
 
-}
+return result
+} 
+
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+console.log(result);
 
 
 

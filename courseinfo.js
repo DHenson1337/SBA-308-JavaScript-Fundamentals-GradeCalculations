@@ -61,7 +61,7 @@ function getLearnerData(course, ag, submissions) {
   const unSortedId = [];
   const result = [];
 
-
+try {
   // Compares assignmentgroup and course id#
   if (course.id !== ag.course_id) {
     console.log("Invalid input, course.id doesn't match this group")
@@ -91,17 +91,18 @@ function getLearnerData(course, ag, submissions) {
   for (let i = 0; i < submissions.length; i++) {
     for (let j = 0; j < dueAssignments.length; j++) {
       if (submissions[i].assignment_id === dueAssignments[j].id) {
-        let points = submissions[i].submission.score / dueAssignments[j].points_possible;
 
         // Check if the submission is late  
         const submittedAt = new Date(submissions[i].submission.submitted_at);
         const dueAt = new Date(dueAssignments[j].due_at);
         const isLate = submittedAt > dueAt;
-        if (isLate) { points *= 0.90 };
-
+        if (isLate) { points = (submissions[i].submission.score*.9) / (dueAssignments[j].points_possible);}
+        else { points = submissions[i].submission.score / dueAssignments[j].points_possible;}
+       
 
         // Locate learners to assign points too
         for (let k = 0; k < result.length; k++) {
+          
           if (result[k].id == submissions[i].learner_id) {
             // Assign the values to respective learners
             result[k][submissions[i].assignment_id] = points;
@@ -115,10 +116,11 @@ function getLearnerData(course, ag, submissions) {
       }
     }
   }
+  // Adding the Average weighted score
   let z = 0;
   while (z < result.length) {
     if (result[z].totalPoints > 0) {
-      result[z].avg = result[z].totalScore / result[z].totalPoints;
+      result[z].avg = parseFloat((result[z].totalScore / result[z].totalPoints).toFixed(2));
     } else {
       result[z].avg = 0; // In case there are no points possible
     }
@@ -131,9 +133,11 @@ function getLearnerData(course, ag, submissions) {
 
 
 
+} catch (error){
+  console.log("Error 404, your data is incorrect, not my code :)", error);
+}
 
 
-  // result[2].test = "Test"
 
   return result
 }
